@@ -1,0 +1,48 @@
+@model Product
+
+@{
+    var id = Model.ProductId;
+}
+
+<!-- IMG location on top, content bottom like be column -->
+<!-- product-item  shadow -->
+
+<div class="card mb-2 product-item shadow">
+    <a asp-controller="Shop" asp-action="Edit" asp-route-id="@Model.ProductId"
+       class="fas fa-cog fa-x2 d-flex flex-row-reverse product-edit-btn p-1">
+    </a>
+    <img class="card-img-top" src="~/img/@Model.ImageUrl" alt="">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Name</h5>
+        <small class="text-muted">
+            <i class="fas fa-lira-sign"></i>@Model.Price
+        </small>
+    </div>
+    <div class="card-footer text-center d-flex justify-content-between">
+        <a asp-controller="shop" asp-action="Details" asp-route-url="@Model.Url" class="btn btn-outline-primary end">Details</a>
+        <a asp-controller="shop" asp-action="AddToCart" asp-route-id="@Model.ProductId" class="btn btn-success end">Buy</a>
+    </div>
+</div>
+
+
+<!--
+
+Content location on left, IMG location right
+
+<div class="card mb-3" style="max-width: 540px;">
+    <div class="row no-gutters">
+        <div class="col-md-6">
+            <img class="card-img img-fluid" src="~/img/@Model.ImageUrl" alt="">
+        </div>
+        <div class="col-md-6">
+            <h5 class="card-title">@Model.Name</h5>
+            <p class="card-text">@Model.Description</p>
+            <div class="d-flex justify-content-between">
+                <h5 class="card-text start">@Model.Price₺</h5>
+                <a href="#" class="btn btn-primary end">İncele</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+-->

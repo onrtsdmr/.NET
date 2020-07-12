@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopApp</title>
+    <link rel="stylesheet" href="/modules/bootstrap/dist/css/bootstrap.min.css">
+    @if (IsSectionDefined("Style"))
+    {
+        @RenderSection("Style",false)
+    }
+    else
+    {
+        <link rel="stylesheet" href="~/css/style.css">
+    }
+</head>
+<body>
+@if (TempData["message"] != null)
+{
+    var alertData = JsonConvert.DeserializeObject<AlertMessage>((TempData["message"] as string)!);
+    <div class="alert alert-@alertData.Type">@alertData.Message</div>
+}
+<main class="my-3">
+    @RenderBody()
+</main>
+<script src="https://kit.fontawesome.com/30a8ec618e.js" crossorigin="anonymous"></script>
+<script src="/modules/jquery/dist/jquery.min.js"></script>
+@RenderSection("Scripts", false)
+</body>
+</html>

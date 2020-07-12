@@ -1,0 +1,44 @@
+﻿@model CategoryListViewModel
+
+<div class="table-responsive row">
+    <div class="col-md-12">
+        <h1>
+            Admin Categories
+        </h1>
+        <hr>
+        <a class="btn btn-primary btn-sm" asp asp-controller="Admin" asp-action="CreateCategory">Add Category</a>
+        <hr>
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <td style="width: 30px">Id</td>
+                <td>Name</td>
+                <td></td>
+            </tr>
+            </thead>
+            <tbody>
+            @if (Model.CategoryModels.Count > 0)
+            {
+                @foreach (var item in Model.CategoryModels)
+                {
+                    <tr>
+                        <td>@item.CategoryId</td>
+                        <td>@item.Name</td>
+                        <td>
+                            <a asp-controller="Admin" asp-action="EditCategory" asp-route-id="@item.CategoryId" class="btn btn-primary btn-sm mr-2">Edit</a>
+                            <a asp-controller="Admin" asp-action="RemoveCategory" asp-route-id="@item.CategoryId" class="btn btn-danger btn-sm mr-2">Delete</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    <h3>Ürün bulunmamaktadır.</h3>
+                </div>
+            }
+
+            </tbody>
+        </table>
+    </div>
+</div>

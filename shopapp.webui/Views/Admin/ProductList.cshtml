@@ -1,0 +1,72 @@
+﻿@model ProductListViewModel
+
+<div class="table-responsive row">
+    <div class="col-md-12">
+        <h1>
+            Admin Products
+        </h1>
+        <hr>
+        <a class="btn btn-primary btn-sm" asp asp-controller="Admin" asp-action="CreateProduct">Add Product</a>
+        <hr>
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <td style="width: 30px">Id</td>
+                <td style="width: 100px">Image</td>
+                <td>Name</td>
+                <td>Price</td>
+                <td>IsHome</td>
+                <td>IsApproved</td>
+                <td></td>
+            </tr>
+            </thead>
+            <tbody>
+            @if (Model.Products.Count > 0)
+            {
+                @foreach (var item in Model.Products)
+                {
+                    <tr>
+                        <td>@item.ProductId</td>
+                        <td>
+                            <img src="~/img/@item.ImageUrl" width="80" alt="@item.Name"/>
+                        </td>
+                        <td>@item.Name</td>
+                        <td>@item.Price</td>
+                        <td>
+                            @if (item.IsHome)
+                            {
+                                <i class="fas fa-check-circle fa-2x" style="color: green"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-times-circle fa-2x" style="color: red"></i>
+                            }
+                        </td>
+                        <td>
+                            @if (item.IsApproved)
+                            {
+                                <i class="fas fa-check-circle fa-2x" style="color: green"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-times-circle fa-2x" style="color: red"></i>
+                            }
+                        </td>
+                        <td>
+                            <a asp-controller="Admin" asp-action="EditProduct" asp-route-id="@item.ProductId" class="btn btn-primary btn-sm mr-2">Edit</a>
+                            <a asp-controller="Admin" asp-action="RemoveProduct" asp-route-id="@item.ProductId" class="btn btn-danger btn-sm mr-2">Delete</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    <h3>Ürün bulunmamaktadır.</h3>
+                </div>
+            }
+
+            </tbody>
+        </table>
+    </div>
+</div>

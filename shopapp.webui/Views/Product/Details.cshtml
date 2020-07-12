@@ -1,0 +1,51 @@
+@model Product
+
+<div class="card m-4" >
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <a href="/product/remove/@Model.ProductId" class="fas fa-trash fa-x2 product-remove-btn p-3"></a>
+      <img src="~/img/@Model.ImageUrl" class="card-img p-3" alt="@Model.Name">
+    </div>
+    <div class="col-md-8">
+      <div class="card-body ">
+        <div class="justify-content-stretch">
+            <h5 class="card-title">@Model.Name</h5>
+            <p class="card-text">@Model.Description</p>
+            <div class="d-flex justify-content-between">
+                <h5 class="card-text start">@Model.Price₺</h5>
+                <a href="/product/details/@Model.ProductId" class="btn btn-primary end">Buy</a>
+            </div>
+        </div>
+      </div>
+      <div class="card-footer">
+            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+        </div>
+    </div>
+  </div>
+</div>
+<div class="card text-center m-4">
+  <div class="card-header">
+    <div class="container">
+        <ul class="nav nav-pills card-header-pills">
+            <li class="nav-item">
+                <a class="nav-link " href="#">Ürün Açıklaması</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Yorumlar</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Taksit Seçenekleri</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Alışveriş Kredisi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">İade Koşulları</a>
+            </li>
+        </ul>
+    </div>
+  </div>
+  <div class="card-body">
+    <p class="card-text">Yorumlar</p>
+  </div>
+</div>

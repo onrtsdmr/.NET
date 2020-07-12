@@ -1,0 +1,53 @@
+﻿@using shopapp.webui.Extensions
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopApp</title>
+    <link rel="stylesheet" href="/modules/bootstrap/dist/css/bootstrap.min.css">
+    @if (IsSectionDefined("Style"))
+    {
+        @RenderSection("Style",false)
+    }
+    else
+    {
+        <link rel="stylesheet" href="~/css/style.css">
+    }
+</head>
+<body>
+
+
+@await Html.PartialAsync("_navbar")
+
+
+
+@if (IsSectionDefined("Header"))
+{
+    @RenderSection("Header", false)
+}
+
+<main class="my-3">
+    <div class="container">
+        @if (TempData["message"] != null)
+        {
+            <partial name="_resultMessage" model="@(TempData.Get<AlertMessage>("message"))"/>
+        }
+        @if (IsSectionDefined("Categories"))
+        {
+            <div class="row">
+                @RenderBody()
+            </div>
+        }
+        else
+        {
+            @RenderBody()
+        }
+    </div>
+</main>
+@await Html.PartialAsync("_footer")
+<script src="https://kit.fontawesome.com/30a8ec618e.js" crossorigin="anonymous"></script>
+<script src="/modules/jquery/dist/jquery.min.js"></script>
+@RenderSection("Scripts", false)
+</body>
+</html>
