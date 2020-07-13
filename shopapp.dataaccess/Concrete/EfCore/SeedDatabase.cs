@@ -12,15 +12,15 @@ namespace shopapp.dataaccess.Concrete.EfCore
 
             if (!context.Database.GetPendingMigrations().Any())
             {
-                // if (context.Categories.Count() == 0)
-                // context.Categories.AddRange(Categories);
+                if (context.Categories.Count() == 0)
+                    context.Categories.AddRange(Categories);
                 
 
-                // if (context.Products.Any())
-                // {
-                //     context.Products.AddRange(Products);
-                // }
-                // context.AddRange(ProductCategories);
+                if (context.Products.Any())
+                {
+                    context.Products.AddRange(Products);
+                    context.AddRange(ProductCategories);
+                }
             }
 
             context.SaveChanges();

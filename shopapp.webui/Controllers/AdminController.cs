@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,8 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Newtonsoft.Json;
 using shopapp.business.Abstract;
 using shopapp.entity;
 using shopapp.webui.Extensions;
@@ -39,6 +36,82 @@ namespace shopapp.webui.Controllers
             this._userManager = userManager;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> UserEdit(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                var selectedRoles = await _userManager.GetRolesAsync(user);
+                var roles = _roleManager.Roles.Select(i => i.Name);
+
+                ViewBag.Roles = roles;
+                return View(new UserDetailsModel()
+                {
+                    UserId = user.Id,
+                    UserName = user.UserName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    EmailConfirmed = user.EmailConfirmed,
+                    SelectedRoles = selectedRoles
+                });
+            }
+
+            return Redirect("~/admin/user/list");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UserEdit(UserDetailsModel model, string[] selectedRoles)
+        {
+            // ViewBag.SelectedRoles = selectedRoles;
+            if (!ModelState.IsValid) return View(model);
+
+            var user = await _userManager.FindByIdAsync(model.UserId);
+
+            if (user != null)
+            {
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.UserName = model.UserName;
+                user.Email = model.Email;
+                user.EmailConfirmed = model.EmailConfirmed;
+
+                var result = await _userManager.UpdateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    var userRoles = await _userManager.GetRolesAsync(user);
+                    selectedRoles = selectedRoles ?? new string[] { };
+                    await _userManager.AddToRolesAsync(
+                        user,
+                        selectedRoles.Except(userRoles).ToArray<string>()// Except => Hariç
+                    );
+
+                    await _userManager.RemoveFromRolesAsync(
+                        user,
+                        userRoles.Except(selectedRoles).ToArray<string>()
+                    );
+
+                    return Redirect("/admin/user/list");
+                }
+            }
+            return Redirect("/admin/user/list");
+        }
+
+
+        public async Task<IActionResult> UserDelete(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                var user = await _userManager.FindByIdAsync(id);
+                if (user != null)
+                    await _userManager.DeleteAsync(user);
+            }
+
+            return RedirectToAction("UserList");
+        }
+
         public IActionResult UserList() =>
             View(_userManager.Users);
 
@@ -49,9 +122,7 @@ namespace shopapp.webui.Controllers
             {
                 var identityRole = await _roleManager.FindByIdAsync(id);
                 if (identityRole != null)
-                {
                     await _roleManager.DeleteAsync(identityRole);
-                }
             }
 
             return RedirectToAction("RoleList");
