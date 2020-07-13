@@ -102,14 +102,14 @@ namespace shopapp.webui
             services.AddControllersWithViews();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration conf,
+            UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
                 SeedDatabase.Seed();
                 app.UseDeveloperExceptionPage();
             }
-
 
             app.UseStaticFiles(); // wwwroot activate.
 
@@ -136,7 +136,7 @@ namespace shopapp.webui
                 //     pattern:"{url}",
                 //     defaults: new {controller="Shop", action="Details"}
                 // );
-                
+
                 endpoints.MapControllerRoute(
                     name: "adminroles",
                     pattern: "admin/role/list",
@@ -162,7 +162,7 @@ namespace shopapp.webui
                     pattern: "admin/user/list",
                     defaults: new {controller = "Admin", action = "UserList"}
                 );
-                
+
                 endpoints.MapControllerRoute(
                     name: "adminproductlist",
                     pattern: "admin/products",
@@ -198,6 +198,8 @@ namespace shopapp.webui
                     pattern: "{controller=Home}/{action=Index}/{id?}"
                 );
             });
+
+            SeedIdentity.Seed(userManager, roleManager, conf).Wait();
         }
     }
 }

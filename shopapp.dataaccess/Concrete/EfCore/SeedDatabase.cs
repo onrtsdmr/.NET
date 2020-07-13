@@ -12,15 +12,14 @@ namespace shopapp.dataaccess.Concrete.EfCore
 
             if (!context.Database.GetPendingMigrations().Any())
             {
-                if (context.Categories.Count() == 0)
-                    context.Categories.AddRange(Categories);
-                
+                // if (context.Categories.Count() == 0)
+                // {
+                //     context.Categories.AddRange(Categories);
+                // }
 
-                if (context.Products.Any())
-                {
-                    context.Products.AddRange(Products);
-                    context.AddRange(ProductCategories);
-                }
+
+                // context.Products.AddRange(Products);
+                // context.AddRange(ProductCategories);
             }
 
             context.SaveChanges();
@@ -37,21 +36,33 @@ namespace shopapp.dataaccess.Concrete.EfCore
         private static Product[] Products =
         {
             new Product()
-                {Name = "Samsung S5", Price = 2000, ImageUrl = "2.png", Description = "İyi Telefon", IsApproved = true, Url = "samsung-s5"},
+            {
+                Name = "Samsung S5", Price = 2000, ImageUrl = "2.png", Description = "İyi Telefon", IsApproved = true,
+                Url = "samsung-s5"
+            },
             new Product()
             {
                 Name = "Xiaomi Redmi Note 8", Price = 2200, ImageUrl = "1.png",
                 Description = "Hem ucuz hem de performanslı", IsApproved = true, Url = "xiaomi-redmi-note-8"
             },
             new Product()
-                {Name = "IPhone 7 Plus", Price = 7000, ImageUrl = "4.png", Description = "Muazzam", IsApproved = true, Url = "iphone-7-plus"},
+            {
+                Name = "IPhone 7 Plus", Price = 7000, ImageUrl = "4.png", Description = "Muazzam", IsApproved = true,
+                Url = "iphone-7-plus"
+            },
             new Product()
-                {Name = "IPhone 7", Price = 6000, ImageUrl = "3.png", Description = "Güzel", IsApproved = true, Url = "iphone-7"},
+            {
+                Name = "IPhone 7", Price = 6000, ImageUrl = "3.png", Description = "Güzel", IsApproved = true,
+                Url = "iphone-7"
+            },
             new Product()
-                {Name = "IPhone 6", Price = 5000, ImageUrl = "3.png", Description = "Güzel", IsApproved = false, Url = "iphone-6"},
+            {
+                Name = "IPhone 6", Price = 5000, ImageUrl = "3.png", Description = "Güzel", IsApproved = false,
+                Url = "iphone-6"
+            },
         };
 
-        private static ProductCategory[] ProductCategories =
+        private static object[] ProductCategories =
         {
             new ProductCategory() {Product = Products[0], CategoryID = 1},
             new ProductCategory() {Product = Products[0], CategoryID = 3},

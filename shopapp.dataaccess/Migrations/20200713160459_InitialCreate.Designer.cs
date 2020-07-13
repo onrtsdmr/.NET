@@ -9,7 +9,7 @@ using shopapp.dataaccess.Concrete.EfCore;
 namespace shopapp.dataaccess.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    [Migration("20200703235033_InitialCreate")]
+    [Migration("20200713160459_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,6 +26,9 @@ namespace shopapp.dataaccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Url")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("CategoryId");
@@ -51,11 +54,17 @@ namespace shopapp.dataaccess.Migrations
                     b.Property<bool>("IsApproved")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<bool>("IsHome")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Name")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<double?>("Price")
                         .HasColumnType("double");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("ProductId");
 

@@ -13,7 +13,8 @@ namespace shopapp.dataaccess.Migrations
                 {
                     CategoryId = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: true),
+                    Url = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -31,7 +32,9 @@ namespace shopapp.dataaccess.Migrations
                     Description = table.Column<string>(nullable: true),
                     ImageUrl = table.Column<string>(nullable: true),
                     CategoryId = table.Column<int>(nullable: false),
-                    IsApproved = table.Column<bool>(nullable: false)
+                    IsApproved = table.Column<bool>(nullable: false),
+                    IsHome = table.Column<bool>(nullable: false),
+                    Url = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
