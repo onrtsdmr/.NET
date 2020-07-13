@@ -13,20 +13,29 @@
                 <li class="nav-item">
                     <a href="" class="nav-link">Orders</a>
                 </li>
-                <li class="nav-item">
-                    <a asp-controller="Admin" asp-action="ProductList" class="nav-link">Admin Products</a>
-                </li>
-                <li class="nav-item">
-                    <a asp-controller="Admin" asp-action="CategoryList" class="nav-link">Admin Category</a>
-                </li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a asp-controller="Admin" asp-action="ProductList" class="nav-link">AProducts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="Admin" asp-action="CategoryList" class="nav-link">ACategory</a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="Admin" asp-action="RoleList" class="nav-link">ARoles</a>
+                    </li>
+                    <li class="nav-item">
+                        <a asp-controller="Admin" asp-action="UserList" class="nav-link">AUsers</a>
+                    </li>
+                }
             }
         </ul>
         <ul class="navbar-nav ml-auto">
 
             <li class="nav-item">
-                                <a asp-controller="Account" asp-action="Manage" class="nav-link">@User.Identity.Name</a>
-                            </li>
-            
+                <a asp-controller="Account" asp-action="Manage" class="nav-link">@User.Identity.Name</a>
+            </li>
+
             @if (User.Identity.IsAuthenticated)
             {
                 <li class="nav-item">

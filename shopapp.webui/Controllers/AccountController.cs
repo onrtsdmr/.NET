@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using shopapp.webui.EmailServices;
@@ -11,6 +12,9 @@ using shopapp.webui.Models;
 namespace shopapp.webui.Controllers
 {
     [AutoValidateAntiforgeryToken] // Tüm post methodlarında token kontrolü yapılır.
+    // [Authorize] Giriş yapmış kullanıcılar.
+    // [AllowAnonymous] Herkes görebilir.
+    
     public class AccountController : Controller
     {
         private UserManager<User> _userManager;
@@ -173,7 +177,7 @@ namespace shopapp.webui.Controllers
 
             var user = await _userManager.FindByEmailAsync(email);
 
-            if (user!=null)
+            if (user != null)
             {
                 var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var url = Url.Action("ResetPassword", "Account", new
@@ -191,22 +195,25 @@ namespace shopapp.webui.Controllers
                 TempData["message"] = AppHelper.CreateMessage("Email sent, check your inbox.", "success");
                 return Redirect("~/");
             }
+
             TempData["message"] = AppHelper.CreateMessage("Email is not registered in the system.", "danger");
             return View(email);
         }
+
         [HttpGet]
         public IActionResult ResetPassword(string userId, string token, string email)
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token)) return Redirect("~/");
-            
+
             var model = new ResetPasswordModel()
             {
                 Token = token,
                 Email = email
             };
-            
+
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ResetPasswordModel model)
         {
@@ -214,7 +221,7 @@ namespace shopapp.webui.Controllers
 
             var user = await _userManager.FindByEmailAsync(model.Email);
 
-            if (user!=null)
+            if (user != null)
             {
                 var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
 
@@ -222,11 +229,13 @@ namespace shopapp.webui.Controllers
                 {
                     return Redirect("~/Account/Login");
                 }
-                
+
                 return View(model);
             }
 
             return Redirect("~/Account/Login");
         }
+
+        public IActionResult AccessDenied() => View();
     }
 }

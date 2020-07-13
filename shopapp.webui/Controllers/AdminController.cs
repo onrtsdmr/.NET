@@ -22,7 +22,7 @@ namespace shopapp.webui.Controllers
     // Onur Taşdemir => Admin
     // Onur => Customer
     // OnurBaba8 =>  
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private IProductService _productService;
@@ -39,6 +39,9 @@ namespace shopapp.webui.Controllers
             this._userManager = userManager;
         }
 
+        public IActionResult UserList() =>
+            View(_userManager.Users);
+
 
         public async Task<IActionResult> RemoveRole(string id)
         {
@@ -50,10 +53,10 @@ namespace shopapp.webui.Controllers
                     await _roleManager.DeleteAsync(identityRole);
                 }
             }
-            
+
             return RedirectToAction("RoleList");
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> RoleEdit(string id)
         {
@@ -119,7 +122,7 @@ namespace shopapp.webui.Controllers
                 }
             }
 
-            return Redirect("/admin/role/edit/"+model.RoleId);
+            return Redirect("/admin/role/edit/" + model.RoleId);
         }
 
         public IActionResult RoleList()
