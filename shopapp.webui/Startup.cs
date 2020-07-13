@@ -136,8 +136,23 @@ namespace shopapp.webui
                 //     pattern:"{url}",
                 //     defaults: new {controller="Shop", action="Details"}
                 // );
-
-
+                
+                endpoints.MapControllerRoute(
+                    name: "adminroles",
+                    pattern: "admin/role/list",
+                    defaults: new {controller = "Admin", action = "RoleList"}
+                );
+                endpoints.MapControllerRoute(
+                    name: "adminroles",
+                    pattern: "admin/role/create",
+                    defaults: new {controller = "Admin", action = "RoleCreate"}
+                );
+                endpoints.MapControllerRoute(
+                    name: "adminroles",
+                    pattern: "admin/role/edit/{id?}",
+                    defaults: new {controller = "Admin", action = "RoleEdit"}
+                );
+                
                 endpoints.MapControllerRoute(
                     name: "adminproductlist",
                     pattern: "admin/products",

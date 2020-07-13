@@ -1,29 +1,150 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 using shopapp.business.Abstract;
 using shopapp.entity;
+using shopapp.webui.Extensions;
 using shopapp.webui.Models;
 using shopapp.webui.Helper;
+using shopapp.webui.Identity;
 
 namespace shopapp.webui.Controllers
 {
+    // Onur Taşdemir => Admin
+    // Onur => Customer
+    // OnurBaba8 =>  
     [Authorize]
     public class AdminController : Controller
     {
         private IProductService _productService;
         private ICategoryService _categoryService;
+        private RoleManager<IdentityRole> _roleManager;
+        private UserManager<User> _userManager;
 
-        public AdminController(IProductService productService, ICategoryService categoryService)
+        public AdminController(IProductService productService, ICategoryService categoryService,
+            RoleManager<IdentityRole> roleManager, UserManager<User> userManager)
         {
             this._productService = productService;
             this._categoryService = categoryService;
+            this._roleManager = roleManager;
+            this._userManager = userManager;
+        }
+
+
+        public async Task<IActionResult> RemoveRole(string id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                var identityRole = await _roleManager.FindByIdAsync(id);
+                if (identityRole != null)
+                {
+                    await _roleManager.DeleteAsync(identityRole);
+                }
+            }
+            
+            return RedirectToAction("RoleList");
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> RoleEdit(string id)
+        {
+            var role = await _roleManager.FindByIdAsync(id);
+            var members = new List<User>();
+            var nonMembers = new List<User>();
+
+            if (role == null) return RedirectToAction("RoleList");
+
+            foreach (var user in _userManager.Users.ToList())
+            {
+                var list = await _userManager.IsInRoleAsync(user, role.Name)
+                    ? members
+                    : nonMembers;
+                list.Add(user);
+            }
+
+            var model = new RoleDetails()
+            {
+                Role = role,
+                Members = members,
+                NonMembers = nonMembers
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RoleEdit(RoleEditModel model)
+        {
+            if (!ModelState.IsValid) return View(model.RoleId);
+
+            foreach (var userId in model.IdsToAdd ?? new string[] { })
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+
+                var result = await _userManager.AddToRoleAsync(user, model.RoleName);
+
+                if (!result.Succeeded)
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+            }
+
+            foreach (var userId in model.IdsToRemove ?? new string[] { })
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+
+                if (user != null)
+                {
+                    var result = await _userManager.RemoveFromRoleAsync(user, model.RoleName);
+
+                    if (!result.Succeeded)
+                    {
+                        foreach (var error in result.Errors)
+                        {
+                            ModelState.AddModelError("", error.Description);
+                        }
+                    }
+                }
+            }
+
+            return Redirect("/admin/role/edit/"+model.RoleId);
+        }
+
+        public IActionResult RoleList()
+        {
+            return View(_roleManager.Roles);
+        }
+
+        [HttpGet]
+        public IActionResult RoleCreate() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> RoleCreate(RoleModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var result = await _roleManager.CreateAsync(new IdentityRole(model.Name));
+
+            if (result.Succeeded) return RedirectToAction("RoleList");
+
+            foreach (var item in result.Errors)
+            {
+                TempData.Put("message", $"{item}\n");
+            }
+
+            return View();
         }
 
         public IActionResult ProductList() => View(new ProductListViewModel() {Products = _productService.GetAll()});

@@ -1,0 +1,68 @@
+﻿@model RoleDetails
+
+@section Scripts
+{
+    <script src="/modules/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="/modules/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+}
+
+<!-- Script -->
+
+<div class="card pr-4 shadow">
+    <div class="container m-4 p-4">
+        <h1 class="h3">Edit Role</h1>
+        <img src="~/img/logo.png" alt="" class="w-25 p-3">
+        <form asp-controller="Admin" asp-action="RoleEdit" method="POST">
+            <input type="hidden" name="RoleId" value="@Model.Role.Id"/>
+            <input type="hidden" name="RoleName" value="@Model.Role.Name"/>
+            <h6 class="bg-info text-white p-1">Add To @Model.Role.Name</h6>
+            <table class="table table-bordered table-sm table-hover">
+                @if (Model.NonMembers.Count() == 0)
+                {
+                    <tr>
+                        <td colspan="2">Bütün kullanıcılar role ait</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var user in Model.NonMembers)
+                    {
+                        <tr>
+                            <td>@user.UserName</td>
+                            <td>
+                                <input type="checkbox" style="width: 100px;" name="IdsToAdd" value="@user.Id"/>
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+
+            <hr/>
+            <h6 class="bg-info text-white p-1">Remove To @Model.Role.Name</h6>
+            <table class="table table-bordered table-sm table-hover">
+                @if (Model.Members.Count() == 0)
+                {
+                    <tr>
+                        <td colspan="2">Role ait kullanıcı yok.</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var user in Model.Members)
+                    {
+                        <tr>
+                            <td>@user.UserName</td>
+                            <td>
+                                <input type="checkbox" style="width: 100px;" name="IdsToRemove" value="@user.Id"/>
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+            <div class="form-group">
+                <button class="btn btn-success my-2 my-sm-0" type="submit">Save Changes</button>
+            </div>
+
+        </form>
+    </div>
+</div>
